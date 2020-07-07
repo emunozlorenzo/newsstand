@@ -1,6 +1,7 @@
 import streamlit as st
 import json
 import webbrowser
+import datetime
 
 #### CSS Style ####
 with open("style.css") as f:
@@ -10,7 +11,8 @@ with open("style.css") as f:
 def show_news(news,key,newspaper):
     st.image('./img/'+newspaper+'.png',format='PNG')
     st.markdown('####'+' '+news['title'])
-    st.markdown(news['date']['date1'])
+    news_date = datetime.datetime(news['date']['date2'][0],news['date']['date2'][1],news['date']['date2'][2],news['date']['date2'][3],news['date']['date2'][4])
+    st.markdown(news_date.strftime("%d/%m/%Y, %H:%M"))
     st.markdown('##### Headline')
     st.markdown(news['headline'])
     st.markdown('##### Summarise')
@@ -32,12 +34,19 @@ def main():
     st.image(url,use_column_width=True)
     # Dashboard Title
     st.markdown('# NEWSSTAND PROJECT')
+
     # Selectbox
     options = [i.capitalize() for i in list(data.keys())]
     newspaper = st.selectbox(label='Select Newspaper', options=options, index=0, key='newspaper_select_box')
+    # Dates
+    dates = [datetime.date(data[newspaper.lower()][i]['date']['date2'][:3][0], data[newspaper.lower()][i]['date']['date2'][:3][1], data[newspaper.lower()][i]['date']['date2'][:3][2]) for i in data[newspaper.lower()]]
+    max_date = max(d for d in dates if isinstance(d, datetime.date))
+    min_date = min(d for d in dates if isinstance(d, datetime.date))
+    d = st.date_input("Select Date",value=max_date, min_value=min_date, max_value=max_date)
     # News
     for k,news in data[newspaper.lower()].items():
-        show_news(news,key=k,newspaper=newspaper.lower())
+        if datetime.date(news['date']['date2'][:3][0], news['date']['date2'][:3][1], news['date']['date2'][:3][2]) == d:
+            show_news(news,key=k,newspaper=newspaper.lower())
 
 if __name__ == "__main__":
     main()
