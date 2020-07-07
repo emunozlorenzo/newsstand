@@ -2,11 +2,16 @@ import streamlit as st
 import json
 import webbrowser
 import datetime
+from termcolor import colored
 
 #### CSS Style ####
 with open("style.css") as f:
     st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
-
+    st.markdown('<style>h1{color: #043263 ;text-align:center}</style>', unsafe_allow_html=True)
+    st.markdown('<style>h4{color: #004481;}</style>', unsafe_allow_html=True)
+    st.markdown('<style>h5{color: #1464A5 ;}</style>', unsafe_allow_html=True)
+    st.markdown('<style>h6{color: #DA3851  ;}</style>', unsafe_allow_html=True)
+    
 #### Functions ####
 def show_news(news,key,newspaper):
     st.image('./img/'+newspaper+'.png',format='PNG')
@@ -16,7 +21,10 @@ def show_news(news,key,newspaper):
     st.markdown('##### Headline')
     st.markdown(news['headline'])
     st.markdown('##### Summarise')
-    st.markdown(news['summarise'])
+    if news['summarise'] == 'Premium Content':
+        st.markdown('######'+' '+news['summarise'])
+    else:
+        st.markdown(news['summarise'])
     if newspaper == 'expansion':
         st.image(news['img'],width=400)
     if st.button('Link',key=key):
