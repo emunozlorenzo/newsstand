@@ -36,6 +36,7 @@ def find_between( s, first, last ):
 def expansion_news(expansion_entries,word_count=100):
     expansion = {}
     for i in range(len(expansion_entries)):
+        print(i,expansion_entries[i]['title'])
         noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None}
         # Periodico
         noticia['newspaper'] = find_between(s=expansion_entries[i]['id'], first='www.', last='.' )

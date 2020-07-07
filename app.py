@@ -43,7 +43,9 @@ def main():
     st.image(url,use_column_width=True)
     # Dashboard Title
     st.markdown('# NEWSSTAND PROJECT')
- 
+    # Update
+    #if st.button('Update News',key='update'):
+    #   exec(open("./src/expansion.py").read())
     # Selectbox
     options = [i.capitalize() for i in list(data.keys())]
     newspaper = st.selectbox(label='Select Newspaper', options=options, index=0, key='newspaper_select_box')
