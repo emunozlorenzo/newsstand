@@ -36,7 +36,7 @@ def find_between( s, first, last ):
 def expansion_news(expansion_entries,word_count=100):
     expansion = {}
     for i in range(len(expansion_entries)):
-        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'date':None,'link':None,'text':None,'current_date':None,'img':None}
+        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None}
         # Periodico
         noticia['newspaper'] = find_between(s=expansion_entries[i]['id'], first='www.', last='.' )
         # Title
@@ -57,8 +57,10 @@ def expansion_news(expansion_entries,word_count=100):
         # Summarise
         if text.find('Para seguir leyendo') == -1:
             noticia['summarise'] = summarize(text, word_count=word_count)
+            noticia['premium'] = False
         else:
             noticia['summarise'] = 'Premium Content'
+            noticia['premium'] = True
         # Current Date
         noticia['current_date'] = datetime.datetime.now().timetuple()
         # Image
@@ -77,6 +79,14 @@ print('Desarrollando Diccionario')
 expansion = expansion_news(expansion_entries,word_count=100)
 
 # Save
-print('Guardando Archivo')
+print('Guardando Archivo Expansión')
 with open('../data/data_expansion.json', 'w') as fp:
     json.dump(expansion, fp)
+# Load 
+jsonFile = open("../data/data.json", "r")
+data = json.load(jsonFile)
+data["expansion"] = expansion
+# Save
+print('Guardando Archivo General')
+with open('../data/data.json', 'w') as fp:
+    json.dump(data, fp)
