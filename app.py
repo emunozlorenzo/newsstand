@@ -7,24 +7,24 @@ with open("style.css") as f:
     st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
 
 #### Functions ####
-def show_news(news,key):
-    st.image('./img/expansion2.png',format='PNG')
+def show_news(news,key,newspaper):
+    st.image('./img/'+newspaper+'.png',format='PNG')
     st.markdown('####'+' '+news['title'])
     st.markdown(news['date']['date1'])
     st.markdown('##### Headline')
     st.markdown(news['headline'])
     st.markdown('##### Summarise')
     st.markdown(news['summarise'])
-    st.image(news['img'],width=400)
+    if newspaper == 'expansion':
+        st.image(news['img'],width=400)
     if st.button('Link',key=key):
         webbrowser.open(news['link'])
+    st.markdown('\n')
 
 #### Data ####
 # Load 
 jsonFile = open("./data/data.json", "r")
 data = json.load(jsonFile)
-
-news = data['expansion']['Noticia_01']
 
 def main():
     # Front Image
@@ -32,9 +32,12 @@ def main():
     st.image(url,use_column_width=True)
     # Dashboard Title
     st.markdown('# NEWSSTAND PROJECT')
-
-    for k,news in data['expansion'].items():
-        show_news(news,key=k)
+    # Selectbox
+    options = [i.capitalize() for i in list(data.keys())]
+    newspaper = st.selectbox(label='Select Newspaper', options=options, index=0, key='newspaper_select_box')
+    # News
+    for k,news in data[newspaper.lower()].items():
+        show_news(news,key=k,newspaper=newspaper.lower())
 
 if __name__ == "__main__":
     main()
