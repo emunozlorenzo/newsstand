@@ -38,13 +38,14 @@ def economista_news(economista_entries,word_count=100):
         # Title
         noticia['title'] = economista_entries[i]['title']
         # Headline
-        noticia['headline'] = economista_entries[i]['summary']
+        headline =  re.sub(pattern='&quot;',repl='"',string=economista_entries[i]['summary_detail']['value'])
+        noticia['headline'] = headline
         # Date
         noticia['date'] = {'date1':economista_entries[i]['published'],'date2':economista_entries[i]['published_parsed']}
         # Link
         noticia['link'] = economista_entries[i]['id']
         # Text
-        text = get_only_text(economista_entries[i]['id'])[0]
+        text = get_only_text(economista_entries[i]['id'])[0][len(headline)+1:]
         noticia['text'] = text
         # Summarise
         noticia['summarise'] = summarize(text, word_count=word_count)
