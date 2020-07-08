@@ -26,7 +26,7 @@ def show_news(news,key,newspaper):
         st.markdown('######'+' '+news['summarise'])
     else:
         st.markdown(news['summarise'])
-    if newspaper == 'expansion':
+    if newspaper != 'economista':
         st.image(news['img'],width=400)
     if st.button('Link',key=key):
         webbrowser.open(news['link'])
@@ -44,8 +44,12 @@ def main():
     # Dashboard Title
     st.markdown('# NEWSSTAND PROJECT')
     # Update
-    #if st.button('Update News',key='update'):
-    #   exec(open("./src/expansion.py").read())
+    if st.button('Update News',key='update'):
+        st.write('Updating News...')
+        exec(open("./src/expansion.py").read())
+        st.write('Expansion Updated')
+        exec(open("./src/economista.py").read())
+        st.write('Economista Updated')
     # Selectbox
     options = [i.capitalize() for i in list(data.keys())]
     newspaper = st.selectbox(label='Select Newspaper', options=options, index=0, key='newspaper_select_box')
