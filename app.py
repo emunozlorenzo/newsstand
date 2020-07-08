@@ -40,10 +40,10 @@ data = json.load(jsonFile)
 
 def main():
     # Front Image
-    url = './img/img2.png'
+    url = './img/img3.png'
     st.image(url,use_column_width=True)
     # Dashboard Title
-    st.markdown('# NEWSSTAND PROJECT')
+    st.markdown('# FINANCIAL NEWS')
     # Update
     if st.button('Update News',key='update'):
         st.write(platform)
