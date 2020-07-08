@@ -4,6 +4,7 @@ import webbrowser
 import datetime
 from termcolor import colored
 import os
+from kivy.utils import platform
 
 #### CSS Style ####
 with open("style.css") as f:
@@ -45,7 +46,7 @@ def main():
     st.markdown('# NEWSSTAND PROJECT')
     # Update
     if st.button('Update News',key='update'):
-        st.write('Comming Soon...')
+        st.write(platform)
         #exec(open("./src/expansion.py").read())
         #exec(open("./src/economista.py").read())
     # Selectbox
