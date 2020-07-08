@@ -1,5 +1,6 @@
-termcolor==1.1.0
 gensim==3.8.3
-streamlit==0.62.1
+termcolor==1.1.0
 feedparser==5.2.1
+streamlit==0.62.1
+Kivy==1.11.1
 beautifulsoup4==4.9.1
