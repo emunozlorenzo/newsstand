@@ -45,11 +45,9 @@ def main():
     st.markdown('# NEWSSTAND PROJECT')
     # Update
     if st.button('Update News',key='update'):
-        st.write('Updating News...')
-        exec(open("./src/expansion.py").read())
-        st.write('Expansion Updated')
-        exec(open("./src/economista.py").read())
-        st.write('Economista Updated')
+        st.write('Comming Soon...')
+        #exec(open("./src/expansion.py").read())
+        #exec(open("./src/economista.py").read())
     # Selectbox
     options = [i.capitalize() for i in list(data.keys())]
     newspaper = st.selectbox(label='Select Newspaper', options=options, index=0, key='newspaper_select_box')
