@@ -7,6 +7,7 @@ import os
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
+nltk.download('stopwords')
 import numpy as np
 from PIL import Image
 
