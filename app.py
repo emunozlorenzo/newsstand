@@ -6,8 +6,8 @@ from termcolor import colored
 import os
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
-from nltk.corpus import stopwords
-nltk.download('stopwords')
+#from nltk.corpus import stopwords
+#nltk.download('stopwords')
 import numpy as np
 from PIL import Image
 
@@ -101,7 +101,7 @@ def main():
     if len(text_list) > 0:
         text_list_string = " ".join(text_list)
         # Create and generate a word cloud image:
-        wordcloud = WordCloud(width=400,height=400,margin=1,stopwords=stopwords.words('spanish'),
+        wordcloud = WordCloud(width=400,height=400,margin=1,
                           background_color='white',mask=bank_mask).generate(text_list_string)
 
         
