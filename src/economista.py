@@ -28,11 +28,29 @@ def find_between( s, first, last ):
         return s[start:end]
     except ValueError:
         return ""
+
+def string_found(string1, string2):
+    
+    if re.search(r"\b" + re.escape(string1) + r"\b", string2.lower()):
+        return True
+    return False     
+    
+def bank_tags(text):
+    tags = []
+    dict_banks = {'Santander':['santander'],'BBVA':['bbva'],'Bankinter':['bankinter'],'Bankia':['bankia'],
+                 'Sabadell':['sabadell'],'ING':['ing'],'Abanca':['abanca'],'Deutsche Bank':['deutsche'],
+                  'CaixaBank':['caixabank'],'Openbank':['openbank']}
+    for key,values in dict_banks.items():
+        for i in values:
+            if string_found(i,text.lower()):
+                tags.append(key)
+                break
+    return tags
     
 def economista_news(economista_entries,word_count=100):
     economista = {}
     for i in range(len(economista_entries)):
-        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None}
+        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None,'tag':None}
         # Periodico
         noticia['newspaper'] = find_between(s=economista_entries[i]['id'], first='www.el', last='.' )
         # Title
@@ -47,6 +65,8 @@ def economista_news(economista_entries,word_count=100):
         # Text
         text = get_only_text(economista_entries[i]['id'])[0][len(headline)+1:]
         noticia['text'] = text
+        # Bank Tags
+        noticia['tag'] = bank_tags(text)
         # Summarise
         noticia['summarise'] = summarize(text, word_count=word_count)
         # Current Date

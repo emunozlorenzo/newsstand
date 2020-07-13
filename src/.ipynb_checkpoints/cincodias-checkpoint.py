@@ -28,11 +28,29 @@ def find_between( s, first, last ):
         return s[start:end]
     except ValueError:
         return ""
+
+def string_found(string1, string2):
+    
+    if re.search(r"\b" + re.escape(string1) + r"\b", string2.lower()):
+        return True
+    return False     
+    
+def bank_tags(text):
+    tags = []
+    dict_banks = {'Santander':['santander'],'BBVA':['bbva'],'Bankinter':['bankinter'],'Bankia':['bankia'],
+                 'Sabadell':['sabadell'],'ING':['ing'],'Abanca':['abanca'],'Deutsche Bank':['deutsche'],
+                  'CaixaBank':['caixabank'],'Openbank':['openbank']}
+    for key,values in dict_banks.items():
+        for i in values:
+            if string_found(i,text.lower()):
+                tags.append(key)
+                break
+    return tags
     
 def cincod_news(cincod_entries,word_count=100):
     cincod = {}
     for i in range(len(cincod_entries)):
-        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None}
+        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None,'tag':None}
         # Periodico
         noticia['newspaper'] = find_between(s=cincod_entries[i]['id'], first='//', last='.' )
         # Title
@@ -50,6 +68,8 @@ def cincod_news(cincod_entries,word_count=100):
             index = get_only_text(cincod_entries[i]['id'])[0].index('»') +3
             text = get_only_text(cincod_entries[i]['id'])[0][index:]
         noticia['text'] = text
+        # Bank Tags
+        noticia['tag'] = bank_tags(text)
         # Summarise
         noticia['summarise'] = summarize(text, word_count=word_count)        
         # Current Date

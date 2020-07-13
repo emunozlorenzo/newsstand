@@ -35,9 +35,13 @@ def show_news(news,key,newspaper):
     st.markdown('\n')
 
 #### Data ####
-# Load 
+# Load News
 jsonFile = open("./data/data.json", "r")
 data = json.load(jsonFile)
+# Load Banks
+jsonFile2 = open("./data/bank_dict.json", "r")
+bank_dict = json.load(jsonFile2)
+bank_list = [None] + sorted(list(bank_dict.keys()))
 
 def main():
     # Front Image
@@ -47,6 +51,9 @@ def main():
     # Dashboard Title
     st.markdown('# FINANCIAL NEWS')
     
+    # Sidebar
+    banks = st.sidebar.selectbox("Select a bank", options=bank_list,index=0,key='bank_select_box')
+
     # Update
     if st.button('Update News',key='update'):
         st.write('Coming Soon...')
@@ -76,7 +83,10 @@ def main():
     for newspaper in newspapers:
         for k,news in data[newspaper.lower()].items():
             if datetime.date(news['date']['date2'][:3][0], news['date']['date2'][:3][1], news['date']['date2'][:3][2]) == d:
-                show_news(news,key=k,newspaper=newspaper.lower())
+                if banks == None:
+                    show_news(news,key=k,newspaper=newspaper.lower())
+                elif banks in news['tag']:
+                    show_news(news,key=k,newspaper=newspaper.lower())
 
 if __name__ == "__main__":
     main()
