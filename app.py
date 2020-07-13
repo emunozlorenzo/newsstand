@@ -27,7 +27,7 @@ def show_news(news,key,newspaper):
         st.markdown('######'+' '+news['summarise'])
     else:
         st.markdown(news['summarise'])
-    if newspaper != 'economista':
+    if news['img'] != None:
         st.image(news['img'],width=450,use_column_width=True)
     #if st.button('Link',key=key):
         #webbrowser.open(news['link'])
