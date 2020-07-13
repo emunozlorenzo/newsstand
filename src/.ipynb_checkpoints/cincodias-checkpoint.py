@@ -55,7 +55,10 @@ def cincod_news(cincod_entries,word_count=100):
         # Current Date
         noticia['current_date'] = datetime.datetime.now().timetuple()
         # Image
-        noticia['img'] = cincod_entries[i]['links'][1]['href']
+        if len(cincod_entries[i]['links']) > 1:
+            noticia['img'] = cincod_entries[i]['links'][1]['href']
+        else:
+             noticia['img'] = None
         cincod.update({'Noticia'+'_'+str("%02d")%(i+1):noticia})
     return cincod
 
