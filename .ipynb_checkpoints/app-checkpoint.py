@@ -103,15 +103,16 @@ def main():
         wordcloud = WordCloud(width=400,height=400,margin=1,stopwords=stopwords.words('spanish'),
                           background_color='white',mask=bank_mask).generate(text_list_string)
 
-        
+
+
         # Display the generated image:
-        st.markdown('#### WordCloud')
         fig = plt.figure(figsize = (40,40))
         fig.patch.set_facecolor('black')
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis("off")
         plt.show()
-        st.pyplot()
+        st.sidebar.pyplot()
+
 
 if __name__ == "__main__":
     main()
