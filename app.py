@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 #nltk.download('stopwords')
 import numpy as np
 from PIL import Image
+import pickle
 
 #### CSS Style ####
 with open("style.css") as f:
@@ -50,6 +51,9 @@ bank_dict = json.load(jsonFile2)
 bank_list = [None] + sorted(list(bank_dict.keys()))
 # Mask
 bank_mask = np.array(Image.open("./img/bank4.png"))
+# Stopwords
+with open("./data/stopwords.txt", "rb") as fp:   # Unpickling
+    stopwords = pickle.load(fp)
 
 def main():
     # Front Image
@@ -97,14 +101,14 @@ def main():
                 elif banks in news['tag']:
                     show_news(news,key=k,newspaper=newspaper.lower())
                     text_list.append(news['text'])
-    
+
+  
     if len(text_list) > 0:
         text_list_string = " ".join(text_list)
         # Create and generate a word cloud image:
         wordcloud = WordCloud(width=400,height=400,margin=1,
-                          background_color='white',mask=bank_mask).generate(text_list_string)
+                          background_color='white',mask=bank_mask,stopwords=stopwords).generate(text_list_string)
 
-        
         # Display the generated image:
         st.markdown('#### WordCloud')
         fig = plt.figure(figsize = (40,40))
@@ -112,7 +116,7 @@ def main():
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis("off")
         plt.show()
-        st.pyplot()
+        st.sidebar.pyplot()
 
 if __name__ == "__main__":
     main()
