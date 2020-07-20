@@ -64,6 +64,9 @@ def economista_news(economista_entries,word_count=100):
         noticia['link'] = economista_entries[i]['id']
         # Text
         text = get_only_text(economista_entries[i]['id'])[0][len(headline)+1:]
+        if  text.find('\n\t\t\t\tif') != -1:
+            index =  text.find('\n\t\t\t\tif')
+            text = text[:index]
         noticia['text'] = text
         # Bank Tags
         noticia['tag'] = bank_tags(text)
