@@ -110,7 +110,6 @@ def main():
                           background_color='white',mask=bank_mask,stopwords=stopwords).generate(text_list_string)
 
         # Display the generated image:
-        st.markdown('#### WordCloud')
         fig = plt.figure(figsize = (40,40))
         fig.patch.set_facecolor('black')
         plt.imshow(wordcloud, interpolation='bilinear')
