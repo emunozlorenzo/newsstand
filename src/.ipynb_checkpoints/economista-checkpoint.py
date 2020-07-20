@@ -21,6 +21,14 @@ def get_only_text(url):
     text=' '.join(map(lambda p: p.text, soup.find_all('p')))
     return [text,soup.title.text]
 
+def get_img(url):
+    page=urlopen(url)
+    soup=BeautifulSoup(page,"html.parser")
+    if soup.find('div',class_='articleHero') != None:
+        return soup.find('div',class_='articleHero').find('div',class_='articleImage').find('img')['data-src']
+    else:
+        return None
+
 def find_between( s, first, last ):
     try:
         start = s.index( first ) + len( first )
@@ -75,7 +83,7 @@ def economista_news(economista_entries,word_count=100):
         # Current Date
         noticia['current_date'] = datetime.datetime.now().timetuple()
         # Image
-        noticia['img'] = None
+        noticia['img'] = get_img(economista_entries[i]['id'])
         economista.update({'Noticia'+'_'+str("%02d")%(i+1):noticia})
     return economista
 
