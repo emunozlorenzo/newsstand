@@ -17,7 +17,7 @@ from bokeh.io import output_file, show
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.plotting import figure
 
-#### CSS Style ####
+#### CSS STYLE ####
 with open("style.css") as f:
     st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
     st.markdown('<style>h1{color: #043263 ;text-align:center;font-family: Bebas Neue}</style>', unsafe_allow_html=True)
@@ -57,26 +57,21 @@ def plot_yf(code,company_name,period):
     #st.line_chart(close[['Close']],height=200)
     #c = alt.Chart(close.reset_index()).mark_line().encode(x='Date',y='Close',tooltip=['Date', 'Close'])
     #st.altair_chart(c, use_container_width=True)
-
     close['Date'] = pd.to_datetime(close.index, format='%Y-%m-%d')
     close["DateString"] = close["Date"].dt.strftime("%Y-%m-%d")
-
     source = ColumnDataSource(data={
         'date'      : close['Date'],
         'adj close' : close['Close'],
         'volume'    : close['Volume'],
     })
-
     p = figure(plot_height=250, x_axis_type="datetime", tools="", toolbar_location=None,
-            title=company_name, sizing_mode="scale_width")
+               title=company_name, sizing_mode="scale_width")
     p.background_fill_color="#f5f5f5"
     p.grid.grid_line_color="white"
     p.xaxis.axis_label = 'Date'
     p.yaxis.axis_label = 'Price'
     p.axis.axis_line_color = None
-
     p.line(x='date', y='adj close', line_width=2, color='#16D29B', source=source)
-
     p.add_tools(HoverTool(
         tooltips=[
             #( 'date',   '@date{F%}'            ),
@@ -93,8 +88,6 @@ def plot_yf(code,company_name,period):
         # display a tooltip whenever the cursor is vertically in line with a glyph
         mode='vline'
     ))
-
-
     return st.bokeh_chart(p, use_container_width=True)
 
 #### DATA ####
@@ -117,15 +110,14 @@ dict_ibex35 = {'CaixaBank':'CABK.MC','Bankia':'BKIA.MC','Sabadell':'SAB.MC','Ban
 'Mediaset':'TL5.MC','INDITEX':'ITX.MC','Grifols':'GRF.MC','IAG':'IAG.MC',
 'Melia':'MEL.MC'}
 periods = ['1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','ytd','max']
-
 # Mask
 bank_mask = np.array(Image.open("./img/bank4.png"))
 # Stopwords
 with open("./data/stopwords.txt", "rb") as fp:   # Unpickling
     stopwords = pickle.load(fp)
 
+#### APP ####
 def main():
-    
     #### SIDEBAR ####
     st.sidebar.markdown('## NEWSSTAND')
     # Navigation
@@ -157,7 +149,6 @@ def main():
                 period = st.selectbox(label='Select Period', options=periods, index=5, key='stock_select_box')
                 plot_yf(code=dict_yf[banks],company_name=banks,period=period)
 
-
         # Selectbox
         options = [i.capitalize() for i in list(data.keys())] + ['All']
         newspaper = st.selectbox(label='Select Newspaper', options=options, index=3, key='newspaper_select_box')
@@ -188,7 +179,6 @@ def main():
                         show_news(news,key=k,newspaper=newspaper.lower(),summarise=summarise)
                         text_list.append(news['text'])
 
-        
     #   if len(text_list) > 0:
     #       text_list_string = " ".join(text_list)
     #       # Create and generate a word cloud image:
