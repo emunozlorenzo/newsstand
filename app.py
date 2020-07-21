@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 import pickle
+import yfinance as yf
 
 #### CSS Style ####
 with open("style.css") as f:
@@ -41,7 +42,7 @@ def show_news(news,key,newspaper,summarise):
     st.markdown('**[Link]('+news["link"]+')**')
     st.markdown('\n')
 
-#### Data ####
+#### DATA ####
 # Load News
 jsonFile = open("./data/data.json", "r")
 data = json.load(jsonFile)
@@ -49,6 +50,9 @@ data = json.load(jsonFile)
 jsonFile2 = open("./data/bank_dict.json", "r")
 bank_dict = json.load(jsonFile2)
 bank_list = [None] + sorted(list(bank_dict.keys()))
+dict_yf = {'BBVA':'BBVA.MC','Santander':'SAN.MC','Sabadell':'SAB.MC',
+'CaixaBank':'CABK.MC','Bankinter':'BKT.MC','Bankia':'BKIA.MC','ING':'ING',
+'Deutsche Bank':'DBK.DE','Openbank':None,'Abanca':None}
 # Mask
 bank_mask = np.array(Image.open("./img/bank4.png"))
 # Stopwords
@@ -63,10 +67,12 @@ def main():
     # Dashboard Title
     st.markdown('# FINANCIAL NEWS')
     
-    # Sidebar
+    #### SIDEBAR ####
     st.sidebar.markdown('## NEWSSTAND')
+    # Banks
     st.sidebar.markdown('### Bank')
     banks = st.sidebar.selectbox("Select a bank", options=bank_list,index=0,key='bank_select_box')
+    # Sumary
     st.sidebar.markdown('### Summary')
     summary = st.sidebar.radio(label='Select a type of Summary', options=['Short','Medium','Large'], index=1, key='radio-summarise')
     if summary == 'Short':
@@ -76,13 +82,18 @@ def main():
     else:
         summarise = 'summarise_long'
 
+    #### END SIDEBAR ####
 
-    # Update
-    #if st.button('Update News',key='update'):
-    #    st.write('Coming Soon...')
-        #exec(open("./src/expansion.py").read())
-        #exec(open("./src/economista.py").read())
-    
+    if banks != None:
+        if dict_yf[banks] != None:
+            st.markdown('###'+' '+banks)
+            periods = ['1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','ytd','max']
+            period = st.selectbox(label='Select Period', options=periods, index=5, key='stock_select_box')
+            company = yf.Ticker(dict_yf[banks])
+            hist = company.history(period=period)
+            close = hist[['Close']]
+            st.line_chart(close)
+
     # Selectbox
     options = [i.capitalize() for i in list(data.keys())] + ['All']
     newspaper = st.selectbox(label='Select Newspaper', options=options, index=3, key='newspaper_select_box')
@@ -113,20 +124,19 @@ def main():
                     show_news(news,key=k,newspaper=newspaper.lower(),summarise=summarise)
                     text_list.append(news['text'])
 
-  
-    if len(text_list) > 0:
-        text_list_string = " ".join(text_list)
-        # Create and generate a word cloud image:
-        wordcloud = WordCloud(width=400,height=400,margin=1,
-                          background_color='white',mask=bank_mask,stopwords=stopwords).generate(text_list_string)
-
-        # Display the generated image:
-        fig = plt.figure(figsize = (40,40))
-        fig.patch.set_facecolor('black')
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis("off")
-        plt.show()
-        st.sidebar.pyplot()
-
+    
+#   if len(text_list) > 0:
+#       text_list_string = " ".join(text_list)
+#       # Create and generate a word cloud image:
+#       wordcloud = WordCloud(width=400,height=400,margin=1,
+#                      background_color='white',mask=bank_mask,stopwords=stopwords).generate(text_list_string)
+#
+#        # Display the generated image:
+#        fig = plt.figure(figsize = (40,40))
+#        fig.patch.set_facecolor('black')
+#        plt.imshow(wordcloud, interpolation='bilinear')
+#        plt.axis("off")
+#        plt.show()
+#        st.sidebar.pyplot()
 if __name__ == "__main__":
     main()
