@@ -64,7 +64,7 @@ def main():
     st.markdown('# FINANCIAL NEWS')
     
     # Sidebar
-    st.markdown('## NEWSSTAND')
+    st.sidebar.markdown('## NEWSSTAND')
     banks = st.sidebar.selectbox("Select a bank", options=bank_list,index=0,key='bank_select_box')
 
     # Update
