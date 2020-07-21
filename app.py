@@ -67,8 +67,8 @@ def main():
     banks = st.sidebar.selectbox("Select a bank", options=bank_list,index=0,key='bank_select_box')
 
     # Update
-    if st.button('Update News',key='update'):
-        st.write('Coming Soon...')
+    #if st.button('Update News',key='update'):
+    #    st.write('Coming Soon...')
         #exec(open("./src/expansion.py").read())
         #exec(open("./src/economista.py").read())
     
