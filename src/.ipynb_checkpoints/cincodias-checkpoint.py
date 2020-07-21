@@ -47,10 +47,10 @@ def bank_tags(text):
                 break
     return tags
     
-def cincod_news(cincod_entries,word_count=100):
+def cincod_news(cincod_entries):
     cincod = {}
     for i in range(len(cincod_entries)):
-        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None,'tag':None}
+        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'summarise_short':None,'summarise_long':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None,'tag':None}
         # Periodico
         noticia['newspaper'] = find_between(s=cincod_entries[i]['id'], first='//', last='.' )
         # Title
@@ -71,7 +71,9 @@ def cincod_news(cincod_entries,word_count=100):
         # Bank Tags
         noticia['tag'] = bank_tags(text)
         # Summarise
-        noticia['summarise'] = summarize(text, word_count=word_count)        
+        noticia['summarise'] = summarize(text, word_count=100)
+        noticia['summarise_short'] = summarize(text, word_count=50) 
+        noticia['summarise_long'] = summarize(text, word_count=200)        
         # Current Date
         noticia['current_date'] = datetime.datetime.now().timetuple()
         # Image
@@ -90,7 +92,7 @@ cincod_entries = cincod['entries']
 
 # Dict
 print('Desarrollando Diccionario')
-cincod = cincod_news(cincod_entries,word_count=100)
+cincod = cincod_news(cincod_entries)
 
 # Save
 print('Guardando Archivo Cinco Días')

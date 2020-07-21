@@ -50,10 +50,10 @@ def bank_tags(text):
                 break
     return tags
     
-def expansion_news(expansion_entries,word_count=100):
+def expansion_news(expansion_entries):
     expansion = {}
     for i in range(len(expansion_entries)):
-        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None,'tag':None}
+        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'summarise_short':None,'summarise_long':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None,'tag':None}
         # Periodico
         noticia['newspaper'] = find_between(s=expansion_entries[i]['id'], first='www.', last='.' )
         # Title
@@ -75,10 +75,14 @@ def expansion_news(expansion_entries,word_count=100):
         noticia['tag'] = bank_tags(text)
         # Summarise
         if text.find('Para seguir leyendo') == -1:
-            noticia['summarise'] = summarize(text, word_count=word_count)
+            noticia['summarise'] = summarize(text, word_count=100)
+            noticia['summarise_short'] = summarize(text, word_count=50) 
+            noticia['summarise_long'] = summarize(text, word_count=200) 
             noticia['premium'] = False
         else:
             noticia['summarise'] = 'Premium Content'
+            noticia['summarise_short'] = 'Premium Content'
+            noticia['summarise_long'] = 'Premium Content' 
             noticia['premium'] = True
         # Current Date
         noticia['current_date'] = datetime.datetime.now().timetuple()
@@ -95,7 +99,7 @@ expansion_entries = expansion['entries']
 
 # Dict
 print('Desarrollando Diccionario')
-expansion = expansion_news(expansion_entries,word_count=100)
+expansion = expansion_news(expansion_entries)
 
 # Save
 print('Guardando Archivo Expansión')

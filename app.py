@@ -22,18 +22,18 @@ with open("style.css") as f:
     st.markdown('<style>h6{color: #DA3851  ;}</style>', unsafe_allow_html=True)
     
 #### Functions ####
-def show_news(news,key,newspaper):
+def show_news(news,key,newspaper,summarise):
     st.image('./img/'+newspaper+'.png',format='PNG')
     st.markdown('###'+' '+news['title'])
     news_date = datetime.datetime(news['date']['date2'][0],news['date']['date2'][1],news['date']['date2'][2],news['date']['date2'][3],news['date']['date2'][4])
     st.markdown(news_date.strftime("%d/%m/%Y, %H:%M"))
     st.markdown('#### Headline')
     st.markdown(news['headline'])
-    st.markdown('#### Summarise')
-    if news['summarise'] == 'Premium Content':
-        st.markdown('######'+' '+news['summarise'])
+    st.markdown('#### Summary')
+    if news[summarise] == 'Premium Content':
+        st.markdown('######'+' '+news[summarise])
     else:
-        st.markdown(news['summarise'])
+        st.markdown(news[summarise])
     if news['img'] != None:
         st.image(news['img'],width=450,use_column_width=True)
     #if st.button('Link',key=key):
@@ -65,7 +65,17 @@ def main():
     
     # Sidebar
     st.sidebar.markdown('## NEWSSTAND')
+    st.sidebar.markdown('### Bank')
     banks = st.sidebar.selectbox("Select a bank", options=bank_list,index=0,key='bank_select_box')
+    st.sidebar.markdown('### Summary')
+    summary = st.sidebar.radio(label='Select a type of Summary', options=['Short','Medium','Large'], index=1, key='radio-summarise')
+    if summary == 'Short':
+        summarise = 'summarise_short'
+    elif summary == 'Medium':
+        summarise = 'summarise'
+    else:
+        summarise = 'summarise_long'
+
 
     # Update
     #if st.button('Update News',key='update'):
@@ -75,7 +85,7 @@ def main():
     
     # Selectbox
     options = [i.capitalize() for i in list(data.keys())] + ['All']
-    newspaper = st.selectbox(label='Select Newspaper', options=options, index=0, key='newspaper_select_box')
+    newspaper = st.selectbox(label='Select Newspaper', options=options, index=3, key='newspaper_select_box')
     
     # News
     if newspaper == 'All':
@@ -98,9 +108,9 @@ def main():
         for k,news in data[newspaper.lower()].items():
             if datetime.date(news['date']['date2'][:3][0], news['date']['date2'][:3][1], news['date']['date2'][:3][2]) == d:
                 if banks == None:
-                    show_news(news,key=k,newspaper=newspaper.lower())
+                    show_news(news,key=k,newspaper=newspaper.lower(),summarise=summarise)
                 elif banks in news['tag']:
-                    show_news(news,key=k,newspaper=newspaper.lower())
+                    show_news(news,key=k,newspaper=newspaper.lower(),summarise=summarise)
                     text_list.append(news['text'])
 
   

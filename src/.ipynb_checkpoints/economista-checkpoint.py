@@ -25,7 +25,9 @@ def get_img(url):
     page=urlopen(url)
     soup=BeautifulSoup(page,"html.parser")
     if soup.find('div',class_='articleHero') != None:
-        return soup.find('div',class_='articleHero').find('div',class_='articleImage').find('img')['data-src']
+        if soup.find('div',class_='articleHero').find('div',class_='articleImage') != None:
+            return soup.find('div',class_='articleHero').find('div',class_='articleImage').find('img')['data-src']
+        else: None
     else:
         return None
 
@@ -55,10 +57,10 @@ def bank_tags(text):
                 break
     return tags
     
-def economista_news(economista_entries,word_count=100):
+def economista_news(economista_entries):
     economista = {}
     for i in range(len(economista_entries)):
-        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None,'tag':None}
+        noticia = {'newspaper':None,'title':None,'headline':None,'summarise':None,'summarise_short':None,'summarise_long':None,'date':None,'link':None,'text':None,'current_date':None,'img':None,'premium':None,'tag':None}
         # Periodico
         noticia['newspaper'] = find_between(s=economista_entries[i]['id'], first='www.el', last='.' )
         # Title
@@ -79,7 +81,9 @@ def economista_news(economista_entries,word_count=100):
         # Bank Tags
         noticia['tag'] = bank_tags(text)
         # Summarise
-        noticia['summarise'] = summarize(text, word_count=word_count)
+        noticia['summarise'] = summarize(text, word_count=100)
+        noticia['summarise_short'] = summarize(text, word_count=50) 
+        noticia['summarise_long'] = summarize(text, word_count=200) 
         # Current Date
         noticia['current_date'] = datetime.datetime.now().timetuple()
         # Image
@@ -95,7 +99,7 @@ economista_entries = economista['entries']
 
 # Dict
 print('Desarrollando Diccionario')
-economista = economista_news(economista_entries,word_count=100)
+economista = economista_news(economista_entries)
 
 # Save
 print('Guardando Archivo Expansión')
