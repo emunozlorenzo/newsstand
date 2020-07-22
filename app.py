@@ -118,31 +118,34 @@ with open("./data/stopwords.txt", "rb") as fp:   # Unpickling
 
 #### APP ####
 def main():
-    #### SIDEBAR ####
-    st.sidebar.markdown('## NEWSSTAND')
+    #### MAIN SIDEBAR ####
+    st.sidebar.markdown('## NEWSSTAND PROJECT')
     # Navigation
-    page = st.sidebar.selectbox("Choose a page", ['Newsstand', 'IBEX Stock Market'])
-    # Banks
-    st.sidebar.markdown('### Bank')
-    banks = st.sidebar.selectbox("Select a bank", options=bank_list,index=0,key='bank_select_box')
-    # Sumary
-    st.sidebar.markdown('### Summary')
-    summary = st.sidebar.radio(label='Select a type of Summary', options=['Short','Medium','Large'], index=1, key='radio-summarise')
-    if summary == 'Short':
-        summarise = 'summarise_short'
-    elif summary == 'Medium':
-        summarise = 'summarise'
-    else:
-        summarise = 'summarise_long'
+    st.sidebar.markdown('### Navigation')
+    page = st.sidebar.selectbox("Choose a page", ['NEWSSTAND', 'IBEX35'])
     #### END SIDEBAR ####
-
+    
     #### PAGE 1 ####
-    if page == 'Newsstand':
+    if page == 'NEWSSTAND':
+        #### Sidebar PAGE 1 ####
+        # Banks
+        st.sidebar.markdown('### Bank')
+        banks = st.sidebar.selectbox("Select a bank", options=bank_list,index=0,key='bank_select_box')
+        # Sumary
+        st.sidebar.markdown('### Summary')
+        summary = st.sidebar.radio(label='Select a type of Summary', options=['Short','Medium','Large'], index=1, key='radio-summarise')
+        if summary == 'Short':
+            summarise = 'summarise_short'
+        elif summary == 'Medium':
+            summarise = 'summarise'
+        else:
+            summarise = 'summarise_long'
+        #### End Sidebar PAGE 1 ####
+        
         # Front Image
-        url = './img/img3.png'
+        url = './img/img4.png'
         st.image(url,use_column_width=True)
         # Dashboard Title
-        st.markdown('# FINANCIAL NEWS')
         if banks != None:
             if dict_yf[banks] != None:
                 st.markdown('###'+' '+banks)
@@ -194,11 +197,10 @@ def main():
     #        st.sidebar.pyplot()
 
     #### PAGE 2 ####
-    elif page == 'IBEX Stock Market':
+    elif page == 'IBEX35':
         # Front Image
-        url = './img/img2.png'
+        url = './img/img6.png'
         st.image(url,use_column_width=True)
-        st.markdown('# IBEX STOCK MARKET')
         companies = st.selectbox("Select a Company", options=sorted(list(dict_ibex35.keys())),index=0,key='companies_select_box')
         period_ = st.selectbox(label='Select Period', options=periods, index=5, key='stock_select_box2')
         plot_yf(code=dict_ibex35[companies],company_name=companies,period=period_)
