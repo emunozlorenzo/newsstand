@@ -16,6 +16,7 @@ import numpy as np
 from bokeh.io import output_file, show
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.plotting import figure
+from gensim.summarization.summarizer import summarize
 
 #### CSS STYLE ####
 with open("style.css") as f:
@@ -112,6 +113,11 @@ dict_ibex35 = {'CaixaBank':'CABK.MC','Bankia':'BKIA.MC','Sabadell':'SAB.MC','Ban
 periods = ['1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','ytd','max']
 # Mask
 bank_mask = np.array(Image.open("./img/bank4.png"))
+cloud_mask = np.array(Image.open("./img/cloud.jpg"))
+brain_mask = np.array(Image.open("./img/brain.jpg"))
+vader_mask = np.array(Image.open("./img/starwars.jpg"))
+sw_mask = np.array(Image.open("./img/starwars2.jpg"))
+
 # Stopwords
 with open("./data/stopwords.txt", "rb") as fp:   # Unpickling
     stopwords = pickle.load(fp)
@@ -122,7 +128,7 @@ def main():
     st.sidebar.markdown('## NEWSSTAND PROJECT')
     # Navigation
     st.sidebar.markdown('### Navigation')
-    page = st.sidebar.selectbox("Choose a page", ['NEWSSTAND', 'IBEX35'])
+    page = st.sidebar.selectbox("Choose a page", ['NEWSSTAND', 'IBEX35','HOW DOES IT WORK?'])
     #### END SIDEBAR ####
     
     #### PAGE 1 ####
@@ -204,6 +210,35 @@ def main():
         companies = st.selectbox("Select a Company", options=sorted(list(dict_ibex35.keys())),index=0,key='companies_select_box')
         period_ = st.selectbox(label='Select Period', options=periods, index=5, key='stock_select_box2')
         plot_yf(code=dict_ibex35[companies],company_name=companies,period=period_)
+
+    elif page == 'HOW DOES IT WORK?':
+        # Front Image
+        url = './img/img9.png'
+        st.image(url,use_column_width=True)
+        st.markdown('### GENSIM: Text Summarization')
+        st.markdown('This module automatically summarizes the given text, by extracting one or more important sentences from the text. In a similar way, it can also extract keywords. This summarizer is based on the , from an [“TextRank” algorithm by Mihalcea et al.](https://web.eecs.umich.edu/~mihalcea/papers/mihalcea.emnlp04.pdf) This algorithm was later improved upon by Barrios et al., by introducing something called a [“BM25 ranking function”](https://raw.githubusercontent.com/summanlp/docs/master/articulo/articulo-en.pdf).')
+        words = st.selectbox(label='Select a number max of words', options=[50,100,200], index=1, key='selectboxwords')
+        text = st.text_input(label='Put your text here!', value='', max_chars=None, key='input1', type='default')
+        summary = summarize(text, word_count=words)
+        if st.button("Let's summarize!"):
+            st.write(summary)
+        st.markdown('### WordCloud')
+        dict_mask = {'Bank':bank_mask,'Cloud':cloud_mask,'Brain':brain_mask,'Darth Vader':vader_mask,'AT StarWars':sw_mask}
+        masks = st.selectbox(label='Select a mask', options=list(dict_mask.keys()), index=1, key='masks')
+        st.markdown('WordCloud is a technique to show which words are the most frequent among the given text. To do this, stopwords, which are words that are very frequently used in a given language and add absolutely no meaning to the text, have to be removed.')
+        if st.button("WordCloud!"):
+            st.markdown('Generating WordCloud...')
+            wordcloud = WordCloud(contour_color='black',
+                                  background_color='white',
+                                  stopwords=stopwords,mask=dict_mask[masks]).generate(text)
+            # Display the generated image:
+            fig = plt.figure()
+            plt.imshow(wordcloud, interpolation='bilinear')
+            plt.axis("off")
+            plt.show()
+            st.pyplot()
+
+
 
 if __name__ == "__main__":
     main()
