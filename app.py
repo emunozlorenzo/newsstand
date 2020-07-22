@@ -227,15 +227,21 @@ def main():
         masks = st.selectbox(label='Select a mask', options=list(dict_mask.keys()), index=1, key='masks')
         st.markdown('WordCloud is a technique to show which words are the most frequent among the given text. To do this, stopwords, which are words that are very frequently used in a given language and add absolutely no meaning to the text, have to be removed.')
         if st.button("WordCloud!"):
-            st.markdown('Generating WordCloud...')
-            wordcloud = WordCloud(contour_color='black',
-                                  background_color='white',
-                                  stopwords=stopwords,mask=dict_mask[masks]).generate(text)
-            # Display the generated image:
-            fig = plt.figure()
-            plt.imshow(wordcloud, interpolation='bilinear')
-            plt.axis("off")
-            plt.show()
+            with st.spinner('Wait for it...'):
+                my_bar = st.progress(0)
+                my_bar.progress(25)
+                wordcloud = WordCloud(contour_color='black',
+                                    background_color='white',
+                                    stopwords=stopwords,mask=dict_mask[masks]).generate(text)
+                my_bar.progress(50)
+                # Display the generated image:
+                fig = plt.figure()
+                plt.imshow(wordcloud, interpolation='bilinear')
+                plt.axis("off")
+                plt.show()
+                my_bar.progress(100)
+                st.balloons()
+            st.success('Done!')
             st.pyplot()
 
 
