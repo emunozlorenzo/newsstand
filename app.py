@@ -240,7 +240,6 @@ def main():
                 plt.axis("off")
                 plt.show()
                 my_bar.progress(100)
-                st.balloons()
             st.success('Done!')
             st.pyplot()
 
